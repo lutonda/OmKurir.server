@@ -1,27 +1,27 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Request, Response } from "express";
+import "reflect-metadata";
 
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import helmet from "helmet";
-import dotenv from 'dotenv';
-import router from './routes/router';
+import dotenv from "dotenv";
+import router from "./routes/router";
 
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT ??4000;
+const port = process.env.PORT ?? 4000;
 
 app.use(helmet());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000,               // 1000 requests
+  max: 1000, // 1000 requests
 });
 app.use(limiter);
 
-
 var corsOptions = {
-  origin: "*"
+  origin: "*",
 };
 
 app.use(cors(corsOptions));
@@ -39,11 +39,22 @@ app.use((err: any, req: Request, res: Response, next: any) => {
   });
 });
 
-app.use('/api/v2/', router);
-app.get('/', (req: Request, res: Response) => {
-  res.json('OmKurir server is Up');
+app.use("/api/v2/", router);
+app.get("/", (req: Request, res: Response) => {
+  res.json("OmKurir server is Up");
 });
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
-});
+const start = async (): Promise<void> => {
+  try {
+    app.listen(port, () => {
+      console.log(
+        `⚡️[server]: Server is running at https://localhost:${port}`
+      );
+    });
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+void start();

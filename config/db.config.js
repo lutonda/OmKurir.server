@@ -1,13 +1,15 @@
 module.exports = {
-    HOST: "localhost",
-    USER: "hiperbit_omkurir_dev",
+    HOST: "nova-vps.com",
+    USER: "novavpsc_omkurir_dev", //"hiperbit_omkurir_dev",
     PASSWORD: "4OvLMP8QvQipGFEC",
-    DATABASE: "hiperbit_omkurir_dev",
-    dialect: "mysql",
+    DATABASE: "novavpsc_omkurir_dev",//"hiperbit_omkurir_dev",
+    dialect: 'mysql',
     pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
+      
+      max: 15,
+      min: 5,
+      idle: 20000,
+      evict: 15000,
+      acquire: 30000
     }
   };

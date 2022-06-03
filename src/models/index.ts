@@ -3,18 +3,15 @@ import {
   USER,
   PASSWORD,
   HOST,
-  dialect,
   pool,
+  dialect,
 } from "../../config/db.config";
-import {Sequelize, Dialect} from "sequelize";
-
-
-const dia:Dialect=dialect;
-
+import { Sequelize } from "sequelize";
+import UserModel from "./user.model";
 const sequelize = new Sequelize(DATABASE, USER, PASSWORD, {
   host: HOST,
-  dialect: dia,
-  // operatorsAliases: false,
+  dialect: "mysql",
+  //operatorsAliases: false,
   pool: {
     max: pool.max,
     min: pool.min,
@@ -22,11 +19,25 @@ const sequelize = new Sequelize(DATABASE, USER, PASSWORD, {
     idle: pool.idle,
   },
 });
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.log("Unable to connect to the database:", err);
+  });
+// const tutorials = require("./tutorial.model.js")(sequelize, Sequelize);
+const User: any = UserModel(sequelize, Sequelize);
 
-const tutorials = require("./tutorial.model.js")(sequelize, Sequelize);
+sequelize
+  .sync({
+    alter: {
+      drop: false,
+    },
+  })
+  .then(() => {
+    console.log("Drop and re-sync db.");
+  });
 
-export default {
-    Sequelize,
-    sequelize,
-    
-}
+export { Sequelize, sequelize, User };
