@@ -6,6 +6,7 @@ import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
 import router from "./routes/router";
+import { connection } from "./models";
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ app.get("/", (req: Request, res: Response) => {
 
 const start = async (): Promise<void> => {
   try {
+    await connection.sync({alter:true});
     app.listen(port, () => {
       console.log(
         `⚡️[server]: Server is running at https://localhost:${port}`

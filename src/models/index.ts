@@ -6,38 +6,20 @@ import {
   pool,
   dialect,
 } from "../../config/db.config";
-import { Sequelize } from "sequelize";
-import UserModel from "./user.model";
-const sequelize = new Sequelize(DATABASE, USER, PASSWORD, {
+
+import { Sequelize } from "sequelize-typescript";
+
+import Model from './model'
+import Address from "./address";
+import User from "./user";
+
+const connection = new Sequelize({
+  dialect: "mariadb",
   host: HOST,
-  dialect: "mysql",
-  //operatorsAliases: false,
-  pool: {
-    max: pool.max,
-    min: pool.min,
-    acquire: pool.acquire,
-    idle: pool.idle,
-  },
+  username: USER,
+  password: PASSWORD,
+  database: DATABASE,
+  logging: true,
+  models: [Address, User],
 });
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch((err) => {
-    console.log("Unable to connect to the database:", err);
-  });
-// const tutorials = require("./tutorial.model.js")(sequelize, Sequelize);
-const User: any = UserModel(sequelize, Sequelize);
-
-sequelize
-  .sync({
-    alter: {
-      drop: false,
-    },
-  })
-  .then(() => {
-    console.log("Drop and re-sync db.");
-  });
-
-export { Sequelize, sequelize, User };
+export { connection, Address, User, Model };
