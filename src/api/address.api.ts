@@ -1,47 +1,24 @@
 import { Request, Response } from "express";
-import { Address, User } from "../models";
-
+import { Address } from "../models";
+import { AddressRepo } from "../repository/index";
 class AddressApi {
   static create = async (req: Request, res: Response): Promise<Response> => {
-    const { address, city, province } = req.body;
-    const newAddress: Address = await Address.create({
-      address,
-      city,
-      province,
-    });
+    const newAddress: Address | null = await AddressRepo.create(req.body);
     return res.json(newAddress);
   };
 
   static update = async (req: Request, res: Response): Promise<Response> => {
-    const {
-      id,
-      address,
-      city,
-      province,
-      isActive,
-      user: { id: userId },
-    } = req.body;
-    const newAddress = await Address.update(
-      {
-        address,
-        city,
-        province,
-        userId,
-        isActive
-      },
-      { where: { id } }
-    );
+    const newAddress = await AddressRepo.update(req.body);
     return res.json(newAddress);
   };
 
   static getOne = async (req: Request, res: Response): Promise<Response> => {
-    const { id } = req.params;
-    const address: Address | null = await Address.findByPk(id);
+    const address: Address | null = await AddressRepo.find(req.params.id);
     return res.json(address);
   };
 
   static getBy = async (req: Request, res: Response): Promise<Response> => {
-    const address: Address[] = await Address.findAll({include:[User]});
+    const address: Address[] | null = await AddressRepo.allBy(req.params);
     return res.json(address);
   };
 }

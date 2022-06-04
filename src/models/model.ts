@@ -12,7 +12,6 @@ import { uuid } from "uuidv4";
 export default class Model extends Main {
   @Column({
     type: DataType.UUID,
-    allowNull: false,
     primaryKey: true,
   })
   id?: string;
@@ -23,8 +22,14 @@ export default class Model extends Main {
   isActive!: boolean;
 
   @BeforeCreate
-  static addUnicorn = (model: Model) => {
+  static prepare = (model: Model) => {
     model.id = uuid();
     model.isActive = false;
+  };
+
+  @BeforeUpdate 
+  static prepareUpdate = (model: Model) => {
+    model.id ||= uuid();
+    model.isActive ||= true;
   };
 }

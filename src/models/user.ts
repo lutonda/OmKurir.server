@@ -34,7 +34,7 @@ export default class User extends Model {
     type: DataType.INTEGER,
     allowNull: false,
   })
-  type: number = 0;
+  type?: number;
   @Column({
     type: DataType.TEXT,
     allowNull: true,
