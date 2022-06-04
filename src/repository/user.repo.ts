@@ -1,17 +1,19 @@
-import { User } from "../models";
+import { Model, User } from "../models";
 import IRepository from "./irepository";
 import Repository from "./repository";
 
-class UserRepo
-  extends Repository<User>
-  implements IRepository<User>
-{
-  /*constructor(private user: User) {
+class UserRepo extends Repository<User> implements IRepository<User> {
+  constructor() {
     super();
-  }*/
+  }
   find = async (id: string): Promise<User | null> => {
-    const user: User | null = await User.findByPk(id);
+    const options = { attributes: { exclude: ["password"] } };
+    const user: User | null = await this.findOne(User,id, options);
     return user;
+  };
+  findBy = async (query: any): Promise<User | null> => {
+    const users: User[] | null = await this.allBy({ where: query });
+    return users ? users[0] : null;
   };
   create = async (data: any): Promise<User | null> => {
     const { name, email, phoneNumber, password, type, fullName, descriptions } =
@@ -52,7 +54,7 @@ class UserRepo
       descriptions,
       isActive,
     });
-    console.log(user)
+    console.log(user);
     return await this.find(id);
   };
 
@@ -63,14 +65,13 @@ class UserRepo
   all = async (): Promise<User[] | null> => {
     const options = { include: {}, attributes: {} };
 
+    options.attributes = { exclude: ["password"] };
     const data: User[] | null = await this.findAll(User, options);
     return data;
   };
-  allBy = async (query: any): Promise<User[] | null> => {
-    const where = query;
-    const options = { include: {}, attributes: {}, where };
-
-    const data: User[] | null = await this.findAll(User, {});
+  allBy = async (options: any): Promise<User[] | null> => {
+    options.attributes = { exclude: ["password"] };
+    const data: User[] | null = await this.findAll(User, options);
     return data;
   };
 
@@ -85,4 +86,4 @@ class UserRepo
     return true;
   };
 }
-export default new UserRepo;
+export default new UserRepo();

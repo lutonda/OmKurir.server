@@ -1,4 +1,4 @@
- import { User, Address } from "../models";
+import { User, Address } from "../models";
 
 // import { Model as M} from "../models";
 
@@ -7,7 +7,8 @@ import { Model as M, ModelCtor } from "sequelize-typescript";
 export default class Repository<T extends M> {
   protected findOne = async (
     Model: ModelCtor<T>,
-    id: string, options: any
+    id: string,
+    options: any
   ): Promise<T | null> => await Model.findByPk(id, options);
 
   protected createOne = async (
@@ -40,13 +41,12 @@ export default class Repository<T extends M> {
   protected findAll = async (
     Model: ModelCtor<T>,
     options: any
-  ): Promise<T[] | null> => {
-    const { include } = options;
-    const { attributes } = options;
-    const data: T[] = await Model.findAll({ attributes, include });
+  ): Promise<T[] | any> => {
+    const { where, include, attributes } = options;
+    const data: T[] = await Model.findAll({ where, include, attributes });
     return data;
   };
-  protected findBy = async (Model: ModelCtor<T>, options: any) => {
+  protected findAllBy = async (Model: ModelCtor<T>, options: any) => {
     const { include } = options;
     const data: M[] = await Model.findAll({ include });
     return data;
@@ -73,6 +73,5 @@ export default class Repository<T extends M> {
     //  - Delete all the records from the collection
   };
 
-  protected classOf=(className: string)=>eval(className)
-    
+  protected classOf = (className: string) => eval(className);
 }

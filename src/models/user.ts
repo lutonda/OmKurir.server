@@ -35,6 +35,7 @@ export default class User extends Model {
     allowNull: false,
   })
   type?: number;
+  
   @Column({
     type: DataType.TEXT,
     allowNull: true,
@@ -43,5 +44,10 @@ export default class User extends Model {
 
   @HasMany(() => Address)
   address?: Address[];
-
+  
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  accessToken?: string ;
 }
