@@ -42,7 +42,7 @@ class AuthRepo extends Repository<User> {
 
   generateAccessToken = (username: string) => {
     return jwt.sign({ username }, process.env.TOKEN_SECRET, {
-      expiresIn: "1800s",
+      expiresIn: "24d",
     });
   };
 }

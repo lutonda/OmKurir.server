@@ -6,6 +6,6 @@ routerUser.post("/", UserApi.create);
 routerUser.put("/", UserApi.update);
 routerUser.get("/:id", UserApi.getOne);
 routerUser.get("/", UserApi.getBy);
-routerUser.delete("/", UserApi.getBy);
+// routerUser.delete("/", UserApi.getBy);
 
 export default routerUser;

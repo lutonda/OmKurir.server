@@ -20,8 +20,7 @@ export default class Middleware {
         console.log(decoded);
         const { username: email } = decoded;
         const user: User | null = await UserRepo.findBy({ email });
-        if (user) return res.json(user);
-        req.user = user;
+        if (user) req.user = user;
         next();
       }
     );
