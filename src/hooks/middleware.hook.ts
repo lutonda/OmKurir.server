@@ -14,13 +14,12 @@ export default class Middleware {
 
     jwt.verify(
       token,
-      process.env.TOKEN_SECRET,
+      process.env.TOKEN_SECRET??'TOKEN_SECRET',
       async (err: any, decoded: any) => {
         if (err) return res.sendStatus(403);
-        console.log(decoded);
         const { username: email } = decoded;
         const user: User | null = await UserRepo.findBy({ email });
-        if (user) req.user = user;
+        //if (user) req.user = user;
         next();
       }
     );
