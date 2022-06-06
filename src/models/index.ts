@@ -1,12 +1,3 @@
-import {
-  DATABASE,
-  USER,
-  PASSWORD,
-  HOST,
-  pool,
-  dialect,
-} from "../../config/db.config";
-
 import { Sequelize } from "sequelize-typescript";
 
 import Model from './model'
