@@ -1,8 +1,9 @@
+console.log(process.env.DB_HOST+'-----------------------------')
 module.exports = {
-    HOST: "nova-vps.com",
-    USER: "novavpsc_omkurir_dev", //"hiperbit_omkurir_dev",
-    PASSWORD: "4OvLMP8QvQipGFEC",
-    DATABASE: "novavpsc_omkurir_dev",//"hiperbit_omkurir_dev",
+    HOST: process.env.DB_HOST,
+    USER: process.env.DB_USER,
+    PASSWORD: process.env.DB_PASSWORD,
+    DATABASE: process.env.DB_NAME,
     dialect: 'mysql',
     pool: {
       

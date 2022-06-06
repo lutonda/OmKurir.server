@@ -12,9 +12,9 @@ import winston from 'winston';
 import expressWinston from 'express-winston';
 
 dotenv.config();
-
+console.log(process.env);
 const app: Express = express();
-const port = process.env.PORT ?? 4000;
+const port = process.env.PORT;
 
 app.use(helmet());
 
