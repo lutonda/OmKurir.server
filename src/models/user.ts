@@ -18,6 +18,19 @@ export default class User extends Model {
   })
   fullName?: string;
 
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  firstName?: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  lastName?: string;
+
   @Column({
     type: DataType.STRING,
     allowNull: false,

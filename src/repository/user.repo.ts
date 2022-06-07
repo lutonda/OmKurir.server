@@ -1,4 +1,6 @@
-import { Model, User } from "../models";
+import { AddressRepo } from ".";
+import { Address, Model, User } from "../models";
+import authRepo from "./auth.repo";
 import IRepository from "./irepository";
 import Repository from "./repository";
 
@@ -7,8 +9,8 @@ class UserRepo extends Repository<User> implements IRepository<User> {
     super();
   }
   find = async (id: string): Promise<User | null> => {
-    const options = { attributes: { exclude: ["password"] } };
-    const user: User | null = await this.findOne(User,id, options);
+    const options = { attributes: { exclude: ["password"] }, include:[Address] };
+    const user: User | null = await this.findOne(User, id, options);
     return user;
   };
   findBy = async (query: any): Promise<User | null> => {
@@ -16,12 +18,16 @@ class UserRepo extends Repository<User> implements IRepository<User> {
     return users ? users[0] : null;
   };
   create = async (data: any): Promise<User | null> => {
-    const { name, email, phoneNumber, password, type, fullName, descriptions } =
+    const { name, email, phoneNumber, password, type,
+      firstName,
+      lastName, fullName, descriptions } =
       data;
     const user: User | null = await this.createOne(User, {
       name,
       email,
       fullName,
+      firstName,
+      lastName,
       phoneNumber,
       password,
       type,
@@ -40,22 +46,33 @@ class UserRepo extends Repository<User> implements IRepository<User> {
       password,
       type,
       fullName,
+      firstName,
+      lastName,
       descriptions,
       isActive,
+      address = []
     } = data;
-    const user = await this.updateBy(User, {
+    await this.updateBy(User, {
       id,
       name,
       email,
       phoneNumber,
       password,
+      firstName,
+      lastName,
       type,
       fullName,
       descriptions,
       isActive,
     });
-    console.log(user);
-    return await this.find(id);
+    address.forEach((add: any) => {
+      add.id ? AddressRepo.update({ ...add, ...{ user: { id } } }) : AddressRepo.create({ ...add, ...{ user: { id } } });
+    })
+
+    let user = await this.find(id);
+    if (user)
+      user.accessToken = `Bearer ${authRepo.generateAccessToken(user.email)}`;
+    return user;
   };
 
   delete = async (data: any): Promise<boolean> => {

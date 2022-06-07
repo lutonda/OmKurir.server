@@ -1,4 +1,3 @@
-console.log(process.env.DB_HOST+'-----------------------------')
 module.exports = {
     HOST: process.env.DB_HOST,
     USER: process.env.DB_USER,

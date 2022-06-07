@@ -4,13 +4,11 @@ import authRepo from "../repository/auth.repo";
 import { UserRepo } from "../repository/index";
 class AuthApi {
   static singOn = async (req: Request, res: Response): Promise<Response> => {
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    console.log(req.body)
-    console.log(req.headers)
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    const user: User | null = await UserRepo.create(req.body);
+    const user: User | null = await authRepo.singOn(req.body);
+    return res.json(user);
+  };
+  static completeSingOn = async (req: Request, res: Response): Promise<Response> => {
+    const user: User | null = await UserRepo.update({...req.body,...{isActive:true}});
     return res.json(user);
   };
 

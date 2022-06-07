@@ -12,7 +12,24 @@ class AuthRepo extends Repository<User> {
     const user: User | null = await User.findByPk(id);
     return user;
   };
-
+  singOn = async (data: any): Promise<User | null> => {
+    const { name, email, phoneNumber, password, type, firstName, lastName, fullName, descriptions } = data;
+    const user: User | null = await this.createOne(User, {
+      name,
+      email,
+      fullName,
+      firstName,
+      lastName,
+      phoneNumber,
+      password,
+      type,
+      descriptions,
+    });
+    if (user) {
+      user.accessToken = `Bearer ${this.generateAccessToken(user.email)}`;
+    }
+    return user;
+  };
   singIn = async (query: any): Promise<User | null> => {
     const { email, password } = query;
     const options = {
@@ -41,7 +58,7 @@ class AuthRepo extends Repository<User> {
   };
 
   generateAccessToken = (username: string) => {
-    return jwt.sign({ username }, process.env.TOKEN_SECRET??"TOKEN_SECRET", {
+    return jwt.sign({ username }, process.env.TOKEN_SECRET ?? "TOKEN_SECRET", {
       expiresIn: "24d",
     });
   };
