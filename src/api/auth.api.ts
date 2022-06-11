@@ -21,7 +21,7 @@ class AuthApi {
     const user: User | null = await authRepo.singIn(req.body);
     if (user) return res.json(user);
     
-    else return res.status(401).json({message:"user not found"});
+    else return res.status(401).send({message:"auth_does_not_match"});
   };
 
   static singOff = async (req: Request, res: Response): Promise<Response> => {
