@@ -9,12 +9,16 @@ class UserRepo extends Repository<User> implements IRepository<User> {
     super();
   }
   find = async (id: string): Promise<User | null> => {
-    const options = { attributes: { exclude: ["password"] }, include:[Address] };
+    const options = { attributes: { exclude: ["password"] }, include: [Address] };
     const user: User | null = await this.findOne(User, id, options);
     return user;
   };
-  findBy = async (query: any): Promise<User | null> => {
-    const users: User[] | null = await this.allBy({ where: query });
+  findOneBy = async (where: any): Promise<User | null> => {
+    const users: User[] | null = await this.allBy({ where });
+    return users ? users[0] : null;
+  };
+  findBy = async (where: any): Promise<User | null> => {
+    const users: User[] | null = await this.allBy({ where });
     return users ? users[0] : null;
   };
   create = async (data: any): Promise<User | null> => {
@@ -82,14 +86,40 @@ class UserRepo extends Repository<User> implements IRepository<User> {
   all = async (): Promise<User[] | null> => {
     const options = { include: {}, attributes: {} };
 
-    options.attributes = { exclude: ["password"] };
+    //  options.attributes = { exclude: ["password"] };
     const data: User[] | null = await this.findAll(User, options);
     return data;
   };
-  allBy = async (options: any): Promise<User[] | null> => {
-    options.attributes = { exclude: ["password"] };
-    const data: User[] | null = await this.findAll(User, options);
-    return data;
+  allBy = async ({ where, attributes }: any): Promise<User[] | null> => {
+
+    let { exclude = '', include = '' } = attributes ?? {}
+    console.log({ where, attributes })
+    try {
+      exclude = exclude.split(',').push("password");
+    } catch (e: any) {
+      exclude=[]
+
+    }
+    try {
+      include = include.split(',');
+    } catch (e: any) {
+      include=[]
+    }
+
+   // include = include.split(',');
+    attributes = { include, exclude };
+
+    // const data: User[] | null = await this.findAll(User, options);
+
+    console.log('********************************');
+    console.log('********************************');
+    console.log({ where, attributes })
+    console.log('********************************');
+    console.log('********************************');
+    console.log('********************************');
+
+    const users: User[] | null = await this.allBy({ where, attributes });
+    return users;
   };
 
   first = async (): Promise<User | null> => await this.findFirst(User);

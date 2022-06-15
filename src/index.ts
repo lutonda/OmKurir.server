@@ -66,7 +66,7 @@ app.get("/", (req: Request, res: Response) => {
 
 const start = async (): Promise<void> => {
   try {
-    await connection.sync({ alter: true });
+  //  await connection.sync({ alter: true });
     app.listen(port, () => {
       console.log(
         `⚡️[server]: Server is running at https://localhost:${port}`

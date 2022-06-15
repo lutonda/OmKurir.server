@@ -2,6 +2,7 @@ import { Model } from "../models";
 
 export default interface IRepository<T> {
   find(id: string): Promise<T | null>;
+  findOneBy(query: any): Promise<T | null>;
   create(data: any): Promise<T | null>;
   update(data: any): Promise<T | null>;
   delete(data: any): Promise<any>;

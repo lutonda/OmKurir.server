@@ -10,23 +10,23 @@ export interface Request extends Req {
 }
 
 export default class Middleware {
-  static validateToken = (req: Request, res: Response, next: any) => {
+  static validateToken = async (req: Request, res: Response, next: any) => {
     const authorization = req.headers["authorization"];
     const token = authorization && authorization.split(" ")[1];
-    if (token == null) return res.sendStatus(401);
-    jwt.verify(
+    if (token == null) return res.status(403).send({ message: "unautorized" });
+    const decoded: any = await jwt.verify(
       token,
-      process.env.TOKEN_SECRET ?? 'TOKEN_SECRET',
-      async (err: any, decoded: any) => {
-        if (err) return res.sendStatus(403);
-        const { username: email } = decoded;
-        const user: User | null = await UserRepo.findBy({ email });
-        if (user){
-          req.user = user;
-          return next();
-        }
-        return res.sendStatus(403);
-      }
+      process.env.TOKEN_SECRET ?? 'TOKEN_SECRET'
     );
+
+    if (false) return res.sendStatus(403);
+    const { username: email } = decoded;
+    const user: User | null = await UserRepo.findBy({ where: { email } });
+    if (user) {
+      req.user = user;
+      return next();
+    }
+    return res.status(403).send({ message: "auth_does_not_match" });
+
   };
 }

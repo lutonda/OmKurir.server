@@ -14,7 +14,7 @@ export default class Repository<T extends M> {
   protected createOne = async (
     Model: ModelCtor<T>,
     data: any
-  ): Promise<T | null> => await Model.create(data);
+  ): Promise<T | null | any> => { try { return await Model.create(data) } catch (err: any) { return err } };
 
   protected updateBy = async (
     Model: ModelCtor<T>,

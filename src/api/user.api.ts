@@ -23,8 +23,9 @@ class UserApi {
 
   static getBy = async (req: Request, res: Response): Promise<Response> => {
     
-    const user: User[] | null = await UserRepo.allBy(req.params);
-    return res.json(user);
+    //const user: User[] | null = await UserRepo.allBy(req.query);
+    const users: User[] | null = await UserRepo.all();
+    return res.json(users);
   };
 }
 
